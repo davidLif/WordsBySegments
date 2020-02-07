@@ -2,6 +2,7 @@ from pytube import YouTube # It is important to install pytube3 and not pytube
 import youtube_dl
 import ffmpy
 import math
+from WBS.Video.Subtitles import Subtitles
 
 SEGMENT_END_ERROR = "The segment end time is larger than the video duration ({0} seconds)"
 DOWNLOADED_SEGMENT_NAME = "\\{0}_{1}_{2}.mkv"
@@ -10,9 +11,20 @@ DOWNLOADED_SEGMENT_NAME = "\\{0}_{1}_{2}.mkv"
 class YoutubeVideo:
     def __init__(self, url, ffmpeg_path=r"..\Resources\ffmpeg.exe"):
         self.url = url
+        self.id = YoutubeVideo._get_id_from_url(url)
         self.ffmpeg_path = ffmpeg_path
+        self.substitels = None
 
-    def download_captions(self, output_file_path=None, language='en', caps_format_str=True):
+    @staticmethod
+    def _get_id_from_url(url):
+        return url # TODO
+
+    def get_subtitles(self):
+        if not self.substitels:
+            self.substitels = Subtitles.download_subs_from_youtube_video(self.url)
+        return self.substitels
+
+    def download_captions_pytube(self, output_file_path=None, language='en', caps_format_str=True):
         yt = YouTube(self.url)
         caption_obj = yt.captions.get_by_language_code(language)
 

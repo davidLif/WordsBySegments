@@ -47,9 +47,9 @@ def word_bag_for_captions(xml_captions, video_id=0, max_appearences_saved=2):
 
 
 def download_youtube_cut(videourl, dirPath, start, end):
-    ydl_opts = {'verbose': False, 'quiet': True}
+    ydl_opts = {}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(videourl, download=False)
+        info = ydl.extract_info(videourl, download=False, process=False)
         video_id = info['id']
         video_duration_seconds = info['duration']
         formats_info = info['formats']
